@@ -31,6 +31,11 @@ MCEndEffectorController::MCEndEffectorController(std::shared_ptr<mc_rbdyn::Robot
     solver().setContacts(
         {mc_rbdyn::Contact(robots(), "LeftFoot", "AllGround"), mc_rbdyn::Contact(robots(), "RightFoot", "AllGround")});
   }
+  else if(robot().hasSurface("MobileBase"))
+  {
+    solver().setContacts(
+        {mc_rbdyn::Contact(robots(), "MobileBase", "AllGround")});
+  }  
   else if(robot().mb().joint(0).dof() == 0)
   {
     solver().setContacts({});
@@ -48,6 +53,10 @@ MCEndEffectorController::MCEndEffectorController(std::shared_ptr<mc_rbdyn::Robot
   else if(robot().hasBody("r_wrist"))
   {
     body = "r_wrist";
+  }
+  else if(robot().hasBody("gripper_link"))
+  {
+    body = "gripper_link";
   }
   efTask_ = std::make_shared<mc_tasks::EndEffectorTask>(body, robots(), robots().robotIndex(), 5.0, 200.0);
   solver().addTask(efTask_);
